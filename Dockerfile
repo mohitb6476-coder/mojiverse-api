@@ -34,7 +34,11 @@ RUN rm -rf vendor composer.lock
 # Install Laravel dependencies
 RUN composer install --no-dev --optimize-autoloader
 
-# Fix permissions for storage and cache
+# Fix permissions and scaffold missing framework directories
+RUN mkdir -p /var/www/html/storage/framework/views \
+             /var/www/html/storage/framework/sessions \
+             /var/www/html/storage/framework/cache \
+             /var/www/html/bootstrap/cache
 RUN chown -R www-data:www-data /var/www/html/storage /var/www/html/bootstrap/cache
 
 # Ensure database is writable (Fallback for SQLite caching)
