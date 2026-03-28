@@ -34,16 +34,14 @@ RUN rm -rf vendor composer.lock
 # Install Laravel dependencies
 RUN composer install --no-dev --optimize-autoloader
 
-# Set secure permissions for Apache
+# Fix permissions for storage and cache
 RUN chown -R www-data:www-data /var/www/html/storage /var/www/html/bootstrap/cache
 
-# Bind Apache to Render's required PORT environment variable
-RUN echo "Listen \${PORT:-80}" >> /etc/apache2/ports.conf
-RUN sed -ri -e 's!:80!:${PORT:-80}!g' /etc/apache2/sites-available/*.conf
-
-# Ensure migrations execute during container startup (fallback for SQLite caching)
+# Ensure database is writable (Fallback for SQLite caching)
 RUN touch /var/www/html/database/database.sqlite
 RUN chown www-data:www-data /var/www/html/database/database.sqlite
 RUN chmod 777 /var/www/html/database/database.sqlite
 
-EXPOSE 80
+# Render assigns a dynamic PORT at runtime. 
+# We replace default port 80 with Render's $PORT just before starting Apache.
+CMD sed -i "s/80/$PORT/g" /etc/apache2/sites-available/000-default.conf /etc/apache2/ports.conf && docker-php-entrypoint apache2-foreground
