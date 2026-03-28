@@ -47,4 +47,3 @@ RUN chown www-data:www-data /var/www/html/database/database.sqlite
 RUN chmod 777 /var/www/html/database/database.sqlite
 
 EXPOSE 80
-EXPOSE \${PORT}
