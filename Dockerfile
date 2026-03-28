@@ -42,6 +42,8 @@ RUN touch /var/www/html/database/database.sqlite
 RUN chown www-data:www-data /var/www/html/database/database.sqlite
 RUN chmod 777 /var/www/html/database/database.sqlite
 
-# Render assigns a dynamic PORT at runtime. 
-# We replace default port 80 with Render's $PORT just before starting Apache.
-CMD sed -i "s/80/$PORT/g" /etc/apache2/sites-available/000-default.conf /etc/apache2/ports.conf && docker-php-entrypoint apache2-foreground
+# Render assigns a dynamic PORT at runtime.
+# Execute the custom entrypoint script.
+COPY start.sh /usr/local/bin/start.sh
+RUN chmod +x /usr/local/bin/start.sh
+CMD ["/usr/local/bin/start.sh"]
