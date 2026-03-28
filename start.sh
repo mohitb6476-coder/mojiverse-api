@@ -1,6 +1,6 @@
 #!/bin/bash
 # Fallback to 80 if PORT isn't provided
-PORT=\${PORT:-80}
+PORT=${PORT:-80}
 
 # Update Apache configuration files with the dynamic PORT
 sed -i "s/80/$PORT/g" /etc/apache2/sites-available/000-default.conf /etc/apache2/ports.conf
